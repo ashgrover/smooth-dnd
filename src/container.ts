@@ -98,11 +98,11 @@ function findDraggebleAtPos({ layout }: { layout: LayoutManager }) {
       // mouse pos is inside draggable
       // now decide which index to return
       // if (pos > begin && pos <= end) {
-        if (withRespectToMiddlePoints) {
-          return pos < (end + begin) / 2 ? startIndex : startIndex + 1;
-        } else {
-          return startIndex;
-        }
+      if (withRespectToMiddlePoints) {
+        return pos < (end + begin) / 2 ? startIndex : startIndex + 1;
+      } else {
+        return startIndex;
+      }
       // } else {
       //   return null;
       // }
@@ -300,7 +300,7 @@ function getShadowBeginEndForDropZone({ layout }: ContainerProps) {
 function drawDropPlaceholder({ layout, element, getOptions }: ContainerProps) {
   let prevAddedIndex: number | null = null;
   return ({ dragResult: { elementSize, shadowBeginEnd, addedIndex, dropPlaceholderContainer } }: DragInfo) => {
-    const options = getOptions();    
+    const options = getOptions();
     if (options.dropPlaceholder) {
       const { animationDuration, className, showOnTop } = typeof options.dropPlaceholder === 'boolean' ? {} as any as DropPlaceholderOptions : options.dropPlaceholder as DropPlaceholderOptions;
       if (addedIndex !== null) {
@@ -331,7 +331,7 @@ function drawDropPlaceholder({ layout, element, getOptions }: ContainerProps) {
         }
 
         if (prevAddedIndex !== addedIndex && shadowBeginEnd.dropArea) {
-           layout.setBegin(dropPlaceholderContainer.style, (shadowBeginEnd.dropArea.begin) - layout.getBeginEndOfContainer().begin + 'px');
+          layout.setBegin(dropPlaceholderContainer.style, (shadowBeginEnd.dropArea.begin) - layout.getBeginEndOfContainer().begin + 'px');
         }
         prevAddedIndex = addedIndex;
 
@@ -738,9 +738,10 @@ function Container(element: HTMLElement): (options?: ContainerOptions) => IConta
         if (dragResult && dragResult.dropPlaceholderContainer) {
           element.removeChild(dragResult.dropPlaceholderContainer);
         }
-        lastDraggableInfo = null;       
+        lastDraggableInfo = null;
         dragHandler = getDragHandler(props);
-        dropHandler(draggableInfo, dragResult!);
+        if (dragResult)
+          dropHandler(draggableInfo, dragResult!);
         dragResult = null;
       },
       fireRemoveElement() {
