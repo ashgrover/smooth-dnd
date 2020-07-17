@@ -409,7 +409,8 @@ function handleInsertionSizeChange({ element, draggables, layout, getOptions }: 
           if (lastDraggableEnd + elementSize > containerEnd) {
             strectherElement = window.document.createElement('div') as HTMLElement;
             strectherElement.className = stretcherElementClass + ' ' + getOptions().orientation;
-            const stretcherSize = draggables.length > 0 ? elementSize + lastDraggableEnd - containerEnd : elementSize;
+            // const stretcherSize = draggables.length > 0 ? elementSize + lastDraggableEnd - containerEnd : elementSize;
+            const stretcherSize = elementSize;
             layout.setSize(strectherElement.style, `${stretcherSize}px`);
             element.appendChild(strectherElement);
             element[stretcherElementInstance] = strectherElement;
