@@ -1,4 +1,4 @@
-import { containerClass, disbaleTouchActions, dropPlaceholderFlexContainerClass, dropPlaceholderInnerClass, dropPlaceholderWrapperClass, ghostClass, noUserSelectClass, stretcherElementClass, wrapperClass, dropPlaceholderDefaultClass, nonDraggableClass } from './constants';
+import { containerClass, disbaleTouchActions, dropPlaceholderFlexContainerClass, dropPlaceholderInnerClass, dropPlaceholderWrapperClass, ghostClass, noUserSelectClass, stretcherElementClass, wrapperClass, dropPlaceholderDefaultClass } from './constants';
 import { Dictionary } from './interfaces';
 
 const verticalWrapperClass = {
@@ -28,12 +28,7 @@ const css = {
 	[`.${containerClass}.horizontal > .${stretcherElementClass}`]: stretcherElementHorizontalClass,
 	[`.${containerClass}.horizontal > .${wrapperClass}`]: horizontalWrapperClass,
 	[`.${containerClass}.vertical > .${wrapperClass}`]: verticalWrapperClass,
-	[`.${containerClass}.horizontal > .${nonDraggableClass}`]: horizontalWrapperClass,
-	[`.${containerClass}.vertical > .${nonDraggableClass}`]: verticalWrapperClass,
 	[`.${wrapperClass}`]: {
-		'box-sizing': 'border-box'
-	},
-	[`.${nonDraggableClass}`]: {
 		'box-sizing': 'border-box'
 	},
 	[`.${wrapperClass}.horizontal`]: horizontalWrapperClass,
