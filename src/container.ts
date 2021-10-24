@@ -1,4 +1,4 @@
-import { animationClass, containerClass, containerInstance, dropPlaceholderFlexContainerClass, dropPlaceholderInnerClass, dropPlaceholderWrapperClass, stretcherElementClass, stretcherElementInstance, translationValue, wrapperClass, dropPlaceholderDefaultClass } from './constants';
+import { animationClass, containerClass, containerInstance, dropPlaceholderFlexContainerClass, dropPlaceholderInnerClass, dropPlaceholderWrapperClass, stretcherElementClass, stretcherElementInstance, translationValue, wrapperClass, dropPlaceholderDefaultClass, nonDraggableClass } from './constants';
 import { defaultOptions } from './defaults';
 import { domDropHandler } from './dropHandlers';
 import { ContainerOptions, SmoothDnD, SmoothDnDCreator, DropPlaceholderOptions } from './exportTypes';
@@ -56,7 +56,7 @@ function wrapChildren(element: HTMLElement) {
   Array.prototype.forEach.call(element.children, (child: ElementX) => {
     if (child.nodeType === Node.ELEMENT_NODE) {
       let wrapper = child;
-      if (!hasClass(child, wrapperClass)) {
+      if (!hasClass(child, wrapperClass) && !hasClass(child, nonDraggableClass)) {
         wrapper = wrapChild(child);
       }
       wrapper[translationValue] = 0;
@@ -124,7 +124,14 @@ function findDraggebleAtPos({ layout }: { layout: LayoutManager }) {
   };
 
   return (draggables: HTMLElement[], pos: number, withRespectToMiddlePoints = false) => {
-    return find(draggables, pos, 0, draggables.length - 1, withRespectToMiddlePoints);
+    let firstIndex = 0;
+    draggables.forEach(draggable => {
+      const draggableClassName = draggable.className;
+      if (draggableClassName && draggableClassName.includes(nonDraggableClass)) {
+        firstIndex++;
+      }
+    });
+    return find(draggables, pos, firstIndex, draggables.length - 1, withRespectToMiddlePoints);
   };
 }
 
