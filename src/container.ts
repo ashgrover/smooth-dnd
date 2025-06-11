@@ -108,7 +108,10 @@ function findDraggebleAtPos({ layout }: { layout: LayoutManager }) {
       // }
     } else {
       const middleIndex = Math.floor((endIndex + startIndex) / 2);
-      const { begin, end } = layout.getBeginEnd(draggables[middleIndex]);
+      let { begin, end } = layout.getBeginEnd(draggables[middleIndex]);
+      if (!begin || !end) {
+        return null;
+      }
       if (pos < begin) {
         return find(draggables, pos, startIndex, middleIndex - 1, withRespectToMiddlePoints);
       } else if (pos > end) {
@@ -256,7 +259,7 @@ function getDragInsertionIndex({ draggables, layout }: ContainerProps) {
   return ({ dragResult: { shadowBeginEnd, pos } }: { dragResult: DragResult }) => {
     if (!shadowBeginEnd) {
       const index = findDraggable(draggables, pos, true);
-      return index !== null ? index : draggables.length;
+      return index !== null ? index : null;
     } else {
       if (shadowBeginEnd.begin + shadowBeginEnd.beginAdjustment <= pos && shadowBeginEnd.end >= pos) {
         // position inside ghost
@@ -297,9 +300,14 @@ function getShadowBeginEndForDropZone({ layout }: ContainerProps) {
   };
 }
 
+let prevPlaceholderContainer: HTMLDivElement;
+
 function drawDropPlaceholder({ layout, element, getOptions }: ContainerProps) {
   let prevAddedIndex: number | null = null;
   return ({ dragResult: { elementSize, shadowBeginEnd, addedIndex, dropPlaceholderContainer } }: DragInfo) => {
+    if (prevPlaceholderContainer && prevPlaceholderContainer !== dropPlaceholderContainer && element.contains(prevPlaceholderContainer)) {
+      prevPlaceholderContainer.remove();
+    }
     const options = getOptions();
     if (options.dropPlaceholder) {
       const { animationDuration, className, showOnTop } = typeof options.dropPlaceholder === 'boolean' ? {} as any as DropPlaceholderOptions : options.dropPlaceholder as DropPlaceholderOptions;
@@ -328,6 +336,7 @@ function drawDropPlaceholder({ layout, element, getOptions }: ContainerProps) {
           } else {
             element.insertBefore(dropPlaceholderContainer, element.firstElementChild);
           }
+          prevPlaceholderContainer = dropPlaceholderContainer;
         }
 
         if (prevAddedIndex !== addedIndex && shadowBeginEnd.dropArea) {
